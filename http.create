@@ -1,0 +1,20 @@
+### GET home route
+GET http://localhost:3000/
+
+###
+
+### GET all procurement records
+GET http://localhost:3000/kgl/procurement
+
+###
+
+### POST new procurement record
+POST http://localhost:3000/kgl/procurement
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Office Supplies",
+  "amount": 1500,
+  "date": "2026-01-28"
+}

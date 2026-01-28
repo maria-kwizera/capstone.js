@@ -1,0 +1,12 @@
+{
+  "name": "capstone-kgl",
+  "version": "1.0.0",
+  "description": "Simple procurement API for KGL using file persistence",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
