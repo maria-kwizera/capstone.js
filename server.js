@@ -5,6 +5,13 @@ const path = require("path");
 const PORT = process.env.PORT || 3000;
 
 const server = http.createServer((req, res) => {
+  switch (req.method) {
+    case "GET":
+    case "POST":
+      res.writeHead(405, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Method Not Allowed" }));
+      return;
+  }
   const { url, method } = req;
   const dataPath = path.join(__dirname, "data.json");
 

@@ -1,14 +1,29 @@
-{
-    "items": [
-        {
-            "id": 1,
-            "name": "Sample item",
-            "created": "2026-01-28T00:00:00Z"
-        },
-        {
-            "id": 2,
-            "name": "Another item",
-            "created": "2026-01-28T00:00:00Z"
-        }
-    ]
-}
+[
+  {
+    "id": 1,
+    "name": "Maize",
+    "quantity": 500,
+    "unit": "kg",
+    "price": 45000,
+    "date": "2026-01-28",
+    "supplier": "Green Farm Traders"
+  },
+  {
+    "id": 2,
+    "name": "Maize Flour",
+    "quantity": 200,
+    "unit": "bags",
+    "price": 12000,
+    "date": "2026-01-27",
+    "supplier": "Mills & Co"
+  },
+  {
+    "id": 3,
+    "name": "Maize Seed",
+    "quantity": 100,
+    "unit": "kg",
+    "price": 8500,
+    "date": "2026-01-26",
+    "supplier": "Agricultural Supplies Ltd"
+  }
+]
