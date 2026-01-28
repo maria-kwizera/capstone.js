@@ -21,9 +21,41 @@ const server = http.createServer((req, res) => {
   
   const dataPath = path.join(__dirname, "data.json");
 
-  if (url === "/" && method === "GET") {
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.end("<h1>Home route</h1>");
+  // Handle root path - serve index.html
+  if ((url === "/" || url === "/index.html") && method === "GET") {
+    const indexPath = path.join(__dirname, "views", "index.html");
+    fs.readFile(indexPath, "utf8", (err, data) => {
+      if (err) {
+        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.end("Error loading page");
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "text/html" });
+      res.end(data);
+    });
+    return;
+  }
+
+  // Serve static files (CSS, JS, images)
+  if (method === "GET" && (url.startsWith("/style/") || url.startsWith("/js/") || url.startsWith("/images/"))) {
+    const filePath = path.join(__dirname, url);
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.end("File not found");
+        return;
+      }
+
+      let contentType = "text/plain";
+      if (url.endsWith(".css")) contentType = "text/css";
+      else if (url.endsWith(".js")) contentType = "application/javascript";
+      else if (url.endsWith(".png")) contentType = "image/png";
+      else if (url.endsWith(".jpg") || url.endsWith(".jpeg")) contentType = "image/jpeg";
+      else if (url.endsWith(".gif")) contentType = "image/gif";
+
+      res.writeHead(200, { "Content-Type": contentType });
+      res.end(data);
+    });
     return;
   }
 
