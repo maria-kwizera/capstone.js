@@ -57,7 +57,4 @@ git push -u origin main
 2. Deploy to Render.com:
 - Create a new Web Service on Render, connect your GitHub repo.
 - Set the build/ start command: `node server.js`.
-- If using a different start command, set it in Render's settings.
-- Render will give you a public URL for the deployed API.
-
-If you'd like, I can help you step-by-step to create the GitHub repo and deploy to Render.
+- If using a different start command, 
