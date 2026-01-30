@@ -1,6 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const { getProcurements, addProcurement } = require('./app');
 
 const PORT = process.env.PORT || 3000;
 
@@ -61,29 +62,15 @@ const server = http.createServer((req, res) => {
 
   // GET /kgl/procurement - return array of records (empty array if file missing)
   if (url === "/kgl/procurement" && method === "GET") {
-    fs.readFile(dataPath, "utf8", (err, data) => {
-      if (err) {
-        if (err.code === "ENOENT") {
-          res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(JSON.stringify([]));
-          return;
-        }
+    getProcurements()
+      .then((list) => {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(list));
+      })
+      .catch((err) => {
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Failed to read data" }));
-        return;
-      }
-
-      try {
-        JSON.parse(data);
-      } catch (e) {
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Corrupted data file" }));
-        return;
-      }
-
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(data);
-    });
+      });
     return;
   }
 
@@ -110,39 +97,15 @@ const server = http.createServer((req, res) => {
         return;
       }
 
-      // Read existing data (if any)
-      fs.readFile(dataPath, "utf8", (err, data) => {
-        let list = [];
-        if (err) {
-          if (err.code !== "ENOENT") {
-            res.writeHead(500, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ error: "Failed to read data" }));
-            return;
-          }
-          // ENOENT -> treat as empty list
-        } else {
-          try {
-            const parsed = JSON.parse(data);
-            if (Array.isArray(parsed)) list = parsed;
-          } catch (e) {
-            // If existing file is invalid, reset to empty list
-            list = [];
-          }
-        }
-
-        list.push(newRecord);
-
-        fs.writeFile(dataPath, JSON.stringify(list, null, 2), "utf8", (err) => {
-          if (err) {
-            res.writeHead(500, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ error: "Failed to write data" }));
-            return;
-          }
-
+      addProcurement(newRecord)
+        .then(() => {
           res.writeHead(201, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ message: "Record added" }));
+        })
+        .catch(() => {
+          res.writeHead(500, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: "Failed to write data" }));
         });
-      });
     });
 
     req.on("error", () => {
